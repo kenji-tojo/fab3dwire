@@ -12,7 +12,8 @@ rand = "0.8.5"
 serde = "1.0.199"
 serde_json = "1.0.116"
 serde_derive = "1.0.199"
-del-msh = {path="../../del-msh"}
-del-geo = {path="../../del-geo"}
-# del-msh = "0.1.24"
-# del-geo = "0.1.16"
+
+#del-msh = {path="../../del-msh"}
+#del-geo = {path="../../del-geo"}
+del-msh = "0.1.29"
+del-geo = "0.1.23"
