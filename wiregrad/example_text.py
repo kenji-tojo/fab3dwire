@@ -188,7 +188,10 @@ if __name__ == '__main__':
 
         loss += 1e-3 * wg.bending_loss(nodes, cyclic=True)
         loss += 1e1 * wg.tetrahedron_loss(nodes, cyclic=True)
-        loss += 1e1 * wg.repulsion_loss(nodes, d0=0.2, cyclic=True) ## d0 is the size of repulsion support
+
+        ## d0 is the support size of the repulsion force.
+        ## If wire clearances are insufficient, you may want to increase d0 and/or tweak the repulsion weight.
+        loss += 1e1 * wg.repulsion_loss(nodes, d0=0.2, cyclic=True)
 
         loss += 1e1 * wg.uniform_distance_loss(points, cyclic=True)
         loss += wg.length_loss(nodes, cyclic=True)
