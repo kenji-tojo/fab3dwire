@@ -197,3 +197,10 @@ cython_debug/
 # Other files
 *.ini
 *.DS_Store
+
+**_skbuild
+**build/
+**cmake-build-*/
+**output/
+**local/
+
