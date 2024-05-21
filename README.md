@@ -10,7 +10,7 @@ In SIGGRAPH 2024\
 **[[Paper](https://www.dropbox.com/scl/fi/pvvjthg9uir0sg16rvq2n/wireart_sig24.pdf?rlkey=ynzvq9t7ro9btbw8ejwfzjgzy&dl=0)]**
 
 
-## Directory Structure
+## Structure of this Repository
 Our method has two parts, **wire-shape optimization** and **jig generation**, which are implemented respectively in ```wiregrad/``` and ```wirejig/``` directories.
 
 ## Citation
