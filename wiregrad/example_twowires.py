@@ -1,0 +1,250 @@
+import random
+import numpy as np
+import torch
+
+seed = 42
+random.seed(seed)
+np.random.seed(seed)
+torch.manual_seed(seed)
+torch.cuda.manual_seed(seed)
+torch.backends.cudnn.deterministic = True
+
+
+from tqdm import tqdm
+import os, shutil
+import igl
+
+import wiregrad as wg
+
+from visual_loss import *
+from utils import imsave, trefoil, parse_config, save_polyline
+
+
+if __name__ == '__main__':
+    ##
+    ## Optimizing two wires using text input.
+    ##
+
+    from argparse import ArgumentParser
+    parser = ArgumentParser()
+    parser.add_argument('--config', default='./data/config/horse_bull.json', help='path to the input config file')
+    parser.add_argument('--token_path', default='./TOKEN', help='path to the HF access token')
+    parser.add_argument('--no_video', action='store_true', help='not creating video')
+    parser.add_argument('--cpu', action='store_true', help='force to use CPU')
+    args = parser.parse_args()
+
+
+    config_name = os.path.splitext(os.path.basename(args.config))[0]
+    print('config_name =', config_name)
+
+
+    output_dir = os.path.join('./output/text', config_name)
+    os.makedirs(output_dir, exist_ok=True)
+
+    tmp_dir = os.path.join(output_dir, 'tmp')
+    if os.path.exists(tmp_dir):
+        shutil.rmtree(tmp_dir)
+    os.makedirs(tmp_dir)
+
+
+    use_cuda = not args.cpu and torch.cuda.is_available() and wg.cuda.is_available()
+
+    if use_cuda:
+        print('use', torch.cuda.get_device_name())
+        device = 'cuda'
+    else:
+        device = 'cpu'
+
+
+
+    torch.manual_seed(0)
+    np.random.seed(0)
+
+
+    config = parse_config(args.config)
+
+
+    # a color used for silhouette and line renderings
+    color = (0.1, 0.1, 0.1)
+
+    # a constant stroke width to render lines
+    stroke_width = torch.tensor([1.6])
+
+
+
+    cam = wg.Camera()
+    cam.aspect = 1.0
+    cam.fovy = 40.0
+    cam.near = 1e-2
+    cam.far = 100.0
+
+
+    views = []
+
+    for i,view in enumerate(config.views):
+
+        data = dict()
+
+        eye = torch.tensor(view.eye).view(3)
+        center = torch.tensor(view.center).view(3)
+        up = torch.tensor(view.up).view(3)
+
+        data['mvp'] = cam.look_at(eye, center, up)
+
+        data['augmentations'] = get_data_augs(cut_size=config.sds.cut_size)
+        data['sds_loss'] = SDSLoss(cfg=sds_default_config(view.target.caption, token_path=args.token_path), device=device)
+
+        print(f'Input caption for view {i} =', view.target.caption)
+
+        views.append(data)
+
+
+
+    num = config.curve.num_controls
+    points = trefoil(num)
+
+    ## rotate to reproduce the coordinates in our exepriments
+    points = torch.matmul(points, wg.rotation(torch.tensor([0, 90.0, 0])).t())
+
+    points = float(config.curve.radius) * points
+
+    points = torch.cat((
+        points,
+        torch.matmul(points, wg.rotation(torch.tensor([0, 0, 90.0])).t())
+        ), dim=0)
+
+
+
+    points = points.to(device)
+    points.requires_grad_()
+
+    num_knots = config.curve.num_nodes
+
+    def bspline_twowires():
+        return [ wg.cubic_basis_spline(points[i*num:(i+1)*num], knots=num_knots) for i in range(2)]
+
+
+    resolution = config.sds.resolution
+
+
+    for i,data in enumerate(views):
+
+        mvp = data['mvp']
+
+        img = wg.render_polylines(
+            resolution,
+            mvp = mvp,
+            polylines = bspline_twowires(),
+            color = color,
+            stroke_width = stroke_width,
+            cyclic = True
+            )
+
+        imsave.save_image(img, os.path.join(output_dir, f'initial_{i}.png'))
+
+
+
+    unique_edges = torch.cat((
+        wg.polyline_edges(num, cyclic=True),
+        wg.polyline_edges(num, cyclic=True) + num
+        ), dim=0)
+
+    optimier = wg.ReparamVectorAdam(
+        points = points,
+        unique_edges = unique_edges,
+        step_size = 1e-4,
+        reparam_lambda = 0.02
+        )
+
+
+    print('Temporary and final results are saved to', output_dir)
+
+
+    iterations = config.iterations
+    video_frame_id = 0
+
+    for iter in tqdm(range(iterations), 'gradient descent'):
+
+
+        ## Semantic loss
+        nodes_multiple = bspline_twowires()
+        loss = 0
+
+        for i, view in enumerate(views):
+
+            img = wg.render_polylines(
+                resolution,
+                mvp = view['mvp'],
+                polylines = nodes_multiple,
+                color = color,
+                stroke_width = stroke_width,
+                num_edge_samples = 10000
+                ).permute(2,0,1).unsqueeze(0)
+
+            loss += 1e2 * view['sds_loss'](view['augmentations'](img))
+
+            ## saving intermediate results
+            if iter % 10 == 0 or iter == iterations - 1:
+                img = img.detach().squeeze(0).permute(1,2,0)
+                imsave.save_image(img, os.path.join(output_dir, f'current_{i}.png'),logging=False)
+
+                save_polyline(points = points[0*num:1*num].detach(), path = os.path.join(output_dir, 'controls_0.obj'))
+                save_polyline(points = points[1*num:2*num].detach(), path = os.path.join(output_dir, 'controls_1.obj'))
+
+                if not args.no_video and iter % 10 == 0:
+                    imsave.save_image(img, os.path.join(tmp_dir, f'img_{video_frame_id:04d}_{i}.png'),logging=False)
+                    if i == len(views) - 1:
+                        video_frame_id += 1
+
+        loss *= (1.0 / len(views))
+        loss.backward() # flush loss and free internal buffers
+
+
+        # Fabrication and geometric losses
+        nodes_multiple = bspline_twowires()
+        loss = 0
+
+        for nodes in nodes_multiple:
+            loss += 1e-3 * wg.bending_loss(nodes, cyclic=True)
+            loss += 1e2 * wg.tetrahedron_loss(nodes, cyclic=True)
+            loss += 1e1 * wg.repulsion_loss(nodes, d0=0.2, cyclic=True) ## d0 is the size of repulsion support
+
+            loss += 1e1 * wg.uniform_distance_loss(points, cyclic=True)
+            loss += wg.length_loss(nodes, cyclic=True)
+            loss += wg.scale_loss(nodes)
+
+        loss.backward()
+
+
+        ## Gradients occasionally contain NaNs when the spacing of nodes gets very small.
+        ## I suspect they are from the torch.sqrt function in length computation,
+        ##   which produces inf in the backward when the forward pass outputs 0.
+        ## Here's a simple remedy:
+        with torch.no_grad():
+            points.grad = torch.nan_to_num(points.grad)
+
+        optimier.step()
+        optimier.zero_grad()
+
+        torch.cuda.empty_cache()
+
+
+
+
+    if not args.no_video:
+
+        import subprocess
+
+        for i in range(len(views)):
+
+            subprocess.call(['ffmpeg', '-framerate', '60', '-y', '-i',
+                            str(os.path.join(tmp_dir, f'img_%4d_{i}.png')), '-vb', '20M',
+                            '-vcodec', 'libx264',
+                            str(os.path.join(output_dir, f'view_{i}.mp4'))])
+
+
+    if os.path.exists(tmp_dir):
+        shutil.rmtree(tmp_dir)
+
+
+

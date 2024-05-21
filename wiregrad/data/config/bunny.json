@@ -1,0 +1,40 @@
+{
+    "mesh": {
+        "path": "./data/assets/bunny_8k.obj",
+        "rotation": [90.0, 0.0, 0.0]
+    },
+
+    "views": [
+        {
+            "target": { "path": "./data/assets/bunny_0.png" },
+            "eye": [-0.2, -4.0, 1.5],
+            "rotation": [80, 0.0, 0.0]
+        },
+        {
+            "target": { "path": "./data/assets/bunny_1.png" },
+            "eye": [2.5, 2.0, 1.5],
+            "rotation": [80, 0.0, 126.0]
+        },
+        {
+            "target": { "path": "./data/assets/bunny_2.png" },
+            "eye": [-3.0, 2.0, 1.5],
+            "rotation": [80, 0.0, 229.0]
+        }
+    ],
+
+    "curve":
+    {
+        "radius": 0.1,
+        "num_controls": 300,
+        "num_nodes": 1200
+    },
+
+    "guidance":
+    {
+        "resolution": [150, 150],
+        "kernel_size": 101,
+        "sigma": [7.0, 7.0]
+    },
+
+    "iterations": 5000
+}

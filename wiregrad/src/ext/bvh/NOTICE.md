@@ -1,0 +1,1 @@
+The contents of this directory was copied from https://github.com/madmann91/bvh/tree/ed708a2525f68895498ae8316a817a198bb74e3d.
