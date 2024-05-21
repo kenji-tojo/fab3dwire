@@ -28,7 +28,7 @@ The followings are the steps to install all the depndencies. You may want to use
 4. Run ```pip3 install .``` to build and install our core ```wiregrad``` Python module.
 
 ### When using CPU
-Although slow and depreciated, CPU-only environments are also supported. To use the CPU-only version, please replace the step 2 and 3 with:
+Although slow and depreciated, CPU-only execution is also supported EXCEPT ```./examples_text.py``` and ```./examples_twowires.py```. To use the CPU-only version, please replace the step 2 and 3 with:
 
 2. Just skip this step.
 3. ```pip3 install -r ./depndencies/cpu/requirements.txt```.
