@@ -18,18 +18,20 @@ Concretely, this directory includes the core ```wiregrad``` library that impleme
 - cmake 3.28.3
 
 ## Resolving Depndencies
-### When using CUDA (recommended)
+### When using CUDA 11.8 (recommended)
 This code assumes CUDA Toolkit 11.8. Please modify the PyTorch-related lines in ```./requirements.txt``` if you want to use other CUDA versions.
 
 The followings are the steps to install all the depndencies. You may want to use virtual environments like [```venv```](https://docs.python.org/3/library/venv.html) before pip-install.
-1. Install the version 3.4 of [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) to let ```cmake``` run ```find_package(Eigen3 3.4 REQUIRED NO_MODULE)``` in step 3.
-2. Run ```pip3 install -r ./requirements.txt``` to install Python dependencies.
-3. Run ```pip3 install .``` to build and install our core ```wiregrad``` Python module.
+1. Install the version 3.4 of [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) to let ```cmake``` run ```find_package(Eigen3 3.4 REQUIRED NO_MODULE)``` in step 4.
+2. install PyTorch via ```pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu118```
+3. Run ```pip3 install -r ./requirements.txt``` to install Python dependencies.
+4. Run ```pip3 install .``` to build and install our core ```wiregrad``` Python module.
 
 ### When using CPU
-Although slow and depreciated, CPU-only environments are also supported. To use the CPU-only version, please replace the step 2 with:
+Although slow and depreciated, CPU-only environments are also supported. To use the CPU-only version, please replace the step 2 and 3 with:
 
-2. ```pip3 install -r ./depndencies/cpu/requirements.txt```.
+2. Just skip this step.
+3. ```pip3 install -r ./depndencies/cpu/requirements.txt```.
 
 ## Running the Code
 To download the pre-trained models, please put your [Hugging Face](https://huggingface.co/) access token in ```./TOKEN```.
