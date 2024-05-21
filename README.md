@@ -1,5 +1,7 @@
 # Fabricable 3D Wire Art
 
+![](teaser.png)
+
 This repository is the open-source implementation of the paper:
 
 **Fabricable 3D Wire Art**\
