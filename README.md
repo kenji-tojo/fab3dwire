@@ -7,8 +7,7 @@ This repository is the open-source implementation of the paper:
 **Fabricable 3D Wire Art**\
 [Kenji Tojo](https://kenji-tojo.github.io/), [Ariel Shamir](https://faculty.runi.ac.il/arik/site/index.asp), [Bernd Bickel](http://berndbickel.com/about-me), and [Nobuyuki Umetani](https://cgenglab.github.io/en/authors/admin/)\
 In SIGGRAPH 2024\
-**[[Paper](https://www.dropbox.com/scl/fi/pvvjthg9uir0sg16rvq2n/wireart_sig24.pdf?rlkey=ynzvq9t7ro9btbw8ejwfzjgzy&dl=0)]**
-**[[YouTube](https://www.youtube.com/watch?v=cTXkMKcjKpM)]**
+**[[Project page](https://kenji-tojo.github.io/publications/fab3dwire/)]**
 
 
 ## Structure of this Repository
