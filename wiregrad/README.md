@@ -38,7 +38,7 @@ Although slow and depreciated, our ```wiregrad``` library can be built and used 
 2. Skip this step.
 3. ```pip3 install -r ./depndencies/cpu/requirements.txt```.
 
-Unfortunately, we observe that ```./examples_text.py``` and ```./examples_twowires.py``` do not run on CPU as they depend on half-float operations for the evaluation of diffusion models. Other files should run without modification.
+Unfortunately, we observe that ```./examples_text.py``` and ```./examples_twowires.py``` do not run on CPU as they depend on half-float operations for the evaluation of diffusion models. Other files should be executed without modification.
 
 
 ## Running the Code
