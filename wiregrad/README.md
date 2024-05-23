@@ -52,14 +52,17 @@ Please see the start section of each file for a description. In most cases, the 
 
 We also provide options to customize their execution. Please check them out if interested.
 
-## Previewing the Results
-Please use ```./show_bspline.py``` for previewing optimized B-spline curves. You can view a single curve by executing, for example,
+## Viewing the Results
+We put the results of ```./example_*.py``` produced in our environments in ```./data/results/```.
+
+You can use ```./show_bspline.py``` for viewing these (and your) generated B-spline curves.
+
+A single curve can be shown by running, e.g.,
 ```
 $ python3 ./show_bspline.py --file ./data/results/mesh/bunny/controls.obj
 ```
-Note that ```./data/results/``` contains the results of ```./example_*.py``` in our environment.
 
-You can also specify a directory that contians multiple ```./controls_*.obj``` files:
+A directory can also be specified to show multiple ```./controls_*.obj``` files:
 ```
 $ python3 ./show_bspline.py --dir ./data/results/text/horse_bull
 ```
@@ -69,7 +72,7 @@ Some errors you might encounter and how I solved them.
 - ```urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)>``` -> see [this](https://stackoverflow.com/questions/68275857/urllib-error-urlerror-urlopen-error-ssl-certificate-verify-failed-certifica).
 
 ## BibTeX
-If you find this project inspiring and useful, consider citing our paper via
+If you find this project inspiring and useful, consider citing our paper through
 ```
 @inproceedings{Tojo2024Wireart,
 	title = {Fabricable 3D Wire Art},
