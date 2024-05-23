@@ -10,12 +10,14 @@ In SIGGRAPH 2024\
 **[[Project page](https://kenji-tojo.github.io/publications/fab3dwire/)]**
 
 ## WireGrad
-![](./pics/shark.gif)
+<!-- ![](./pics/shark.gif) -->
+<img src="./pics/shark.gif" width="75%">
 
 ```wiregrad/``` contains our code for optimizing 3D wire shapes. The wire-shape optimization depends on our differentiable renderer and various regularization methods for 3D curves, which are also included in this project.
 
 ## WireJig
-![](./pics/wirejig.png)
+<!-- ![](./pics/wirejig.png) -->
+<img src="./pics/wirejig.png" width="75%">
 
 ```wirejig/``` contains our code for automatically generating 3D-printable jigs that assist in wire-art fabrication.
 
