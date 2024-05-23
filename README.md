@@ -21,13 +21,14 @@ In SIGGRAPH 2024\
 
 ```wirejig/``` contains our code for automatically generating 3D-printable jigs that assist in wire-art fabrication.
 
-## Citation
+## BibTeX
 ```
 @inproceedings{Tojo2024Wireart,
 	title = {Fabricable 3D Wire Art},
 	author = {Tojo, Kenji and Shamir, Ariel and Bickel, Bernd and Umetani, Nobuyuki},
 	booktitle = {ACM SIGGRAPH 2024 Conference Proceedings},
 	year = {2024},
-	series = {SIGGRAPH '24}
+	series = {SIGGRAPH '24},
+	doi = {10.1145/3641519.3657453}
 }
 ```

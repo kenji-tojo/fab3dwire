@@ -60,14 +60,15 @@ $ python3 ./show_bspline.py --dir ./data/results/text/horse_bull
 Some errors you might encounter and how I solved them.
 - ```urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)>``` -> see [this](https://stackoverflow.com/questions/68275857/urllib-error-urlerror-urlopen-error-ssl-certificate-verify-failed-certifica).
 
-## Citing the Paper
-If you find this project interesting and useful, consider citing:
+## BibTeX
+If you find this project inspiring and useful, consider citing our paper via
 ```
 @inproceedings{Tojo2024Wireart,
 	title = {Fabricable 3D Wire Art},
 	author = {Tojo, Kenji and Shamir, Ariel and Bickel, Bernd and Umetani, Nobuyuki},
 	booktitle = {ACM SIGGRAPH 2024 Conference Proceedings},
 	year = {2024},
-	series = {SIGGRAPH '24}
+	series = {SIGGRAPH '24},
+	doi = {10.1145/3641519.3657453}
 }
 ```
