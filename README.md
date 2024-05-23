@@ -1,6 +1,6 @@
 # Fabricable 3D Wire Art
 
-![](teaser.png)
+![](./pics/teaser.png)
 
 This repository is the open-source implementation of the paper:
 
@@ -9,9 +9,15 @@ This repository is the open-source implementation of the paper:
 In SIGGRAPH 2024\
 **[[Project page](https://kenji-tojo.github.io/publications/fab3dwire/)]**
 
+## WireGrad
+![](./pics/shark.gif)
 
-## Structure of this Repository
-Our method has two parts, **wire-shape optimization** and **jig generation**, which are implemented respectively in ```wiregrad/``` and ```wirejig/``` directories.
+```wiregrad/``` contains our code for optimizing 3D wire shapes. The wire-shape optimization depends on our differentiable renderer and various regularization methods for 3D curves, which are also included in this project.
+
+## WireJig
+![](./pics/wirejig.png)
+
+```wirejig/``` contains our code for automatically generating 3D-printable jigs that assist in wire-art fabrication.
 
 ## Citation
 ```
