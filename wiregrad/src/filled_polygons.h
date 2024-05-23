@@ -29,7 +29,7 @@ public:
             , total_boxes{ total_boxes }, prims{ prims }, bounds{ bounds } { }
 
     HOST_DEVICE inline
-    bool intersect(const float point[2], float thresh = 0.99f) const;
+    bool intersect(const float point[2]) const;
 
 };
 
@@ -131,7 +131,7 @@ auto integrate_winding_number(const T point[2],
 }
 
 HOST_DEVICE inline
-bool FilledPolygons::intersect(const float point[2], float thresh) const
+bool FilledPolygons::intersect(const float point[2]) const
 {
     auto node_offset = 0;
     auto tree_offset = 0;
@@ -147,7 +147,7 @@ bool FilledPolygons::intersect(const float point[2], float thresh) const
         else
             wn = integrate_winding_number_bruteforce(point, num_nodes[i], nodes + node_offset * 2);
 
-        if (std::abs(wn) > thresh)
+        if (std::abs(wn) > 0.5f)
             return true;
 
         node_offset += num_nodes[i];
