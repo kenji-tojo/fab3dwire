@@ -44,13 +44,13 @@ Unfortunately, we observe that ```./examples_text.py``` and ```./examples_twowir
 ## Running the Code
 To download the pre-trained models, please put your [Hugging Face](https://huggingface.co/) access token in ```./TOKEN```.
 
-Then, all files in the form ```./example_*.py``` and the files under ```./tests/``` can be executed via
+Then, you can run all examples ```./example_*.py``` and tests under ```./tests/``` via
 ```
 $ python3 [filename].py
 ```
-Please see the beginning section of each file for a description. In most cases, the code produces self-explanatory outputs.
+Please see the start section of each file for a description. In most cases, the code also produces self-explanatory outputs.
 
-The code also provides options to customize execution. Please check them out if interested.
+We also provide options to customize their execution. Please check them out if interested.
 
 ## Previewing the Results
 Please use ```./show_bspline.py``` for previewing optimized B-spline curves. You can view a single curve by executing, for example,
