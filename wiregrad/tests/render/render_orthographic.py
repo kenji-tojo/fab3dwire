@@ -12,6 +12,11 @@ from utils import imsave
 
 
 if __name__ == '__main__':
+    ##
+    ## Polygon-fill rendering with orthographic camera projection
+    ##   Lines can be rendered analogously
+    ##
+
     from argparse import ArgumentParser
     parser = ArgumentParser()
     parser.add_argument('-n', '--num', type=int, default=16, help='number of nodes')
@@ -65,8 +70,7 @@ if __name__ == '__main__':
         mvp = mvp,
         polygons = [ nodes ],
         num_samples = args.samples,
-        num_cpu_threads = args.threads,
-        use_hierarchy = True
+        num_cpu_threads = args.threads
         )
 
 

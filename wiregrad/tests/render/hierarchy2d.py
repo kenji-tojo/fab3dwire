@@ -12,7 +12,7 @@ from utils import plotter
 
 if __name__ == '__main__':
     ##
-    ## (Internal) This code visualizes the 2D bounding box hierarchy used for both fill and line rendering of 2D curves.
+    ## (Internal) This code visualizes the 2D bounding box hierarchy used for rendering 2D curves.
     ##
 
     from argparse import ArgumentParser

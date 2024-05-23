@@ -79,8 +79,7 @@ if __name__ == '__main__':
         polylines = [ wg.cubic_basis_spline(points, knots=num_knots) ],
         stroke_width = stroke_width,
         num_samples = args.samples,
-        num_cpu_threads = args.threads,
-        use_hierarchy = True
+        num_cpu_threads = args.threads
         )
     time_forward = time.time() - start
 
@@ -108,8 +107,7 @@ if __name__ == '__main__':
         polylines = [ wg.cubic_basis_spline(points, knots=num_knots) ],
         stroke_width = stroke_width,
         num_samples = 1,
-        num_cpu_threads = args.threads,
-        use_hierarchy = True
+        num_cpu_threads = args.threads
         )
 
     from tqdm import tqdm
@@ -133,8 +131,7 @@ if __name__ == '__main__':
         polylines = [ wg.cubic_basis_spline(points, knots=num_knots) ],
         stroke_width = stroke_width,
         num_samples = args.samples,
-        num_cpu_threads = args.threads,
-        use_hierarchy = True
+        num_cpu_threads = args.threads
         )
 
     FD_image = torch.sum(img_delta - img, dim=-1) / delta
