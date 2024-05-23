@@ -14,7 +14,7 @@ from utils import imsave
 if __name__ == '__main__':
     ##
     ## This code shows an example of the triangle-mesh rendering using wiregrad.
-    ## Note that the backward pass of the mesh rendering is currently not supported.
+    ## Disclaimer: the backward pass of the mesh rendering is not supported.
     ##
 
     from argparse import ArgumentParser

@@ -13,12 +13,12 @@
 namespace nb = nanobind;
 using namespace nb::literals;
 
-template<typename T> using TensorX = nb::ndarray<nb::pytorch, T, nb::shape<nb::any>, nb::c_contig>;
-template<typename T> using TensorXX = nb::ndarray<nb::pytorch, T, nb::shape<nb::any, nb::any>, nb::c_contig>;
+template<typename T> using TensorX = nb::ndarray<nb::pytorch, T, nb::shape<-1>, nb::c_contig>;
+template<typename T> using TensorXX = nb::ndarray<nb::pytorch, T, nb::shape<-1, -1>, nb::c_contig>;
 template<typename T, long dim0> using TensorN = nb::ndarray<nb::pytorch, T, nb::shape<dim0>, nb::c_contig>;
-template<typename T, long dim1> using TensorXN = nb::ndarray<nb::pytorch, T, nb::shape<nb::any, dim1>, nb::c_contig>;
+template<typename T, long dim1> using TensorXN = nb::ndarray<nb::pytorch, T, nb::shape<-1, dim1>, nb::c_contig>;
 template<typename T, long dim0, long dim1> using TensorNN = nb::ndarray<nb::pytorch, T, nb::shape<dim0, dim1>, nb::c_contig>;
-template<typename T, long dim2> using TensorXXN = nb::ndarray<nb::pytorch, T, nb::shape<nb::any, nb::any, dim2>, nb::c_contig>;
+template<typename T, long dim2> using TensorXXN = nb::ndarray<nb::pytorch, T, nb::shape<-1, -1, dim2>, nb::c_contig>;
 
 #define CHECK_TENSOR_SIZE(tensor, dim, size) if (tensor.shape(dim) != size) throw std::runtime_error(#tensor " has an invalid tensor size")
 #define CHECK_CUDA_SUPPORT(is_cuda) if (is_cuda && !wiregrad::cuda::is_available()) throw std::runtime_error("CUDA is not supported")
