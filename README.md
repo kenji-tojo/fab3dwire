@@ -26,7 +26,7 @@ In SIGGRAPH 2024\
 
 ```wiregrad/tests/``` provides various *unit tests* of our differentiable renderer, regularizations, and optimization techniques for 3D curves, which help you understand how our method works and how to use our library in your projects.
 
-## BibTeX
+## Citation
 ```
 @inproceedings{Tojo2024Wireart,
 	title = {Fabricable 3D Wire Art},

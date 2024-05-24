@@ -1,6 +1,6 @@
 # WireGrad
 
-## What's This
+## About
 This is an official open-souce implementation of the wire-shape optimization method presented in our paper **[Fabricable 3D Wire Art](https://kenji-tojo.github.io/publications/fab3dwire/)** (in SIGGRAPH 2024).
 
 Concretely, this directory includes our core ```wiregrad``` library that implements a differentiable renderer and useful regularizations for optimizaing 3D curves.
@@ -19,7 +19,7 @@ For example, the ```./examples_*.py``` files create 3D wire arts from text and o
 - Apple clang 15.0.0
 - cmake 3.28.3
 
-## Resolving Depndencies
+## Depndencies
 ### When using CUDA 11.8 (recommended)
 We assume CUDA Toolkit 11.8. Our code could be used with other CUDA versions, but they were not tested well.
 
@@ -71,7 +71,7 @@ $ python3 ./bspline.py ./data/results/text/horse_bull
 Some errors you might encounter and how I solved them.
 - ```urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)>``` -> see [this](https://stackoverflow.com/questions/68275857/urllib-error-urlerror-urlopen-error-ssl-certificate-verify-failed-certifica).
 
-## BibTeX
+## Citation
 If you find this project inspiring and useful, consider citing our paper through
 ```
 @inproceedings{Tojo2024Wireart,
