@@ -22,23 +22,23 @@ from utils import imsave, trefoil, parse_config, save_polyline
 
 if __name__ == '__main__':
     ##
-    ## A wire-shape optimization example using text input.
+    ## A wire-shape optimization example using image inputs.
     ##
 
     from argparse import ArgumentParser
     parser = ArgumentParser()
-    parser.add_argument('--config', default='./data/config/text/skull_wineglass.json', help='path to the input config file')
-    parser.add_argument('--token_path', default='./TOKEN', help='path to the HF access token')
+    parser.add_argument('--config', default='./data/config/image/guitar_coffee.json', help='path to the input config file')
     parser.add_argument('--no_video', action='store_true', help='not creating video')
     parser.add_argument('--cpu', action='store_true', help='force to use CPU')
     args = parser.parse_args()
+
 
 
     config_name = os.path.splitext(os.path.basename(args.config))[0]
     print('config_name =', config_name)
 
 
-    output_dir = os.path.join('./output/text', config_name)
+    output_dir = os.path.join('./output/image', config_name)
     os.makedirs(output_dir, exist_ok=True)
 
     tmp_dir = os.path.join(output_dir, 'tmp')
@@ -79,6 +79,7 @@ if __name__ == '__main__':
     cam.far = 100.0
 
 
+
     views = []
 
     for i,view in enumerate(config.views):
@@ -91,10 +92,10 @@ if __name__ == '__main__':
 
         data['mvp'] = cam.look_at(eye, center, up)
 
-        data['augmentations'] = get_data_augs(cut_size=config.sds.cut_size)
-        data['sds_loss'] = SDSLoss(cfg=sds_default_config(view.target.caption, token_path=args.token_path), device=device)
+        target = get_target(os.path.join(view.target.path), device=device)
+        data['target'] = target.detach()
 
-        print(f'Input caption for view {i} =', view.target.caption)
+        imsave.save_image(target.squeeze(0).permute(1, 2, 0), os.path.join(output_dir, f'target_{i}.png'))
 
         views.append(data)
 
@@ -105,15 +106,15 @@ if __name__ == '__main__':
     ## rotate to reproduce the coordinates in our exepriments
     points = torch.matmul(points, wg.rotation(torch.tensor([0, 90.0, 0])).t())
 
-    points = float(config.curve.radius) * points
+    points = config.curve.radius * points
 
     points = points.to(device)
     points.requires_grad_()
 
     num_knots = config.curve.num_nodes
 
-    resolution = config.sds.resolution
 
+    resolution = (224, 224)
 
     for i,data in enumerate(views):
 
@@ -135,19 +136,23 @@ if __name__ == '__main__':
     optimier = wg.ReparamVectorAdam(
         points = points,
         unique_edges = wg.polyline_edges(len(points), cyclic=True),
-        step_size = 1e-4,
+        step_size = 5e-4,
         reparam_lambda = 0.02
         )
 
 
+    iterations = config.iterations
+    print('Iteration count =', iterations)
     print('Temporary and final results are saved to', output_dir)
 
 
-    iterations = config.iterations
+    ## semantic loss for image inputs
+    semantic_loss = CLIPConvLoss(device=device, clip_conv_layer=4)
+
     video_frame_id = 0
 
-    for iter in tqdm(range(iterations), 'gradient descent'):
 
+    for iter in tqdm(range(iterations), 'gradient descent'):
 
         ## Semantic loss
         nodes = wg.cubic_basis_spline(points, knots=num_knots)
@@ -164,9 +169,11 @@ if __name__ == '__main__':
                 num_edge_samples = 10000
                 ).permute(2,0,1).unsqueeze(0)
 
-            loss += 1e2 * view['sds_loss'](view['augmentations'](img))
+            loss_dict = semantic_loss(img, view['target'])
 
-            ## saving intermediate results
+            for key in loss_dict:
+                loss += 5e4 * loss_dict[key]
+
             if iter % 10 == 0 or iter == iterations - 1:
                 img = img.detach().squeeze(0).permute(1,2,0)
                 imsave.save_image(img, os.path.join(output_dir, f'current_{i}.png'),logging=False)
@@ -186,16 +193,16 @@ if __name__ == '__main__':
         nodes = wg.cubic_basis_spline(points, knots=num_knots)
         loss = 0
 
-        loss += 1e-3 * wg.bending_loss(nodes, cyclic=True)
-        loss += 1e1 * wg.tetrahedron_loss(nodes, cyclic=True)
+        loss += 2e1 * wg.bending_loss(nodes, cyclic=True)
+        loss += 1e3 * wg.tetrahedron_loss(nodes, cyclic=True)
 
         ## d0 is the support size of the repulsion force.
         ## If wire clearances are insufficient, you may want to increase d0 and/or tweak the repulsion weight.
-        loss += 1e1 * wg.repulsion_loss(nodes, d0=0.2, cyclic=True)
+        loss += 5e0 * wg.repulsion_loss(nodes, d0=0.3, cyclic=True)
 
         loss += 1e1 * wg.uniform_distance_loss(points, cyclic=True)
         loss += wg.length_loss(nodes, cyclic=True)
-        loss += wg.scale_loss(nodes)
+        # loss += wg.scale_loss(nodes)
 
         loss.backward()
 

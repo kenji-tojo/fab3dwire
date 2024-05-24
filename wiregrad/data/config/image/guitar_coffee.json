@@ -1,0 +1,25 @@
+{
+    "views": [
+        {
+            "target": { "path": "./data/assets/guitar.png" },
+            "eye": [0.0, -5.0, 0.0],
+            "center": [0.0, 0.0, 0.0],
+            "up": [0.0, 0.0, 1.0]
+        },
+        {
+            "target": { "path": "./data/assets/coffee.png" },
+            "eye": [5.0, 0.0, 0.0],
+            "center": [0.0, 0.0, 0.0],
+            "up": [0.0, 0.0, 1.0]
+        }
+    ],
+
+    "curve":
+    {
+        "radius": 0.1,
+        "num_controls": 300,
+        "num_nodes": 1200
+    },
+
+    "iterations": 5000
+}
