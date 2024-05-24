@@ -12,7 +12,7 @@ if __name__ == '__main__':
     from argparse import ArgumentParser
     parser = ArgumentParser()
     parser.add_argument('path', help='path to the input obj file or the directory containing obj files')
-    parser.add_argument('--discretize', help='save discretized polyline data')
+    parser.add_argument('--discretize', action='store_true', help='save discretized polyline data')
     parser.add_argument('--num_knots', type=int, default=-1, help='number of knots, which is basically the resolution of the discretized polyline')
     args = parser.parse_args()
 
@@ -63,4 +63,16 @@ if __name__ == '__main__':
         ps.show()
 
     else:
-        pass
+
+        for i,points in enumerate(controls):
+
+            assert input_dir is not None
+
+            num_knots = len(points) * 8 if args.num_knots == -1 else args.num_knots
+
+            save_polyline(
+                nodes = wg.cubic_basis_spline(points, knots=num_knots),
+                path = os.path.join(input_dir, f'polyline_{i}.obj')
+                )
+
+
