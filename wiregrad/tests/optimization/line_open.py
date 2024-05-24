@@ -82,8 +82,8 @@ if __name__ == '__main__':
 
 
     num = 50
-    x = 2.0 * (torch.arange(num) + 0.5) / num
-    x = x.unsqueeze(1)
+    x = 2.4 * (torch.arange(num) + 0.5) / num
+    x = x.unsqueeze(1) - 0.2
     y = torch.zeros(num).unsqueeze(1)
     z = torch.zeros(num).unsqueeze(1)
     points = torch.cat((x, y, z), dim=1)
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     optimizer = wg.ReparamVectorAdam(
         points = points,
         unique_edges = wg.polyline_edges(len(points), cyclic=False),
-        step_size = 1.5e-3,
+        step_size = 1e-3,
         reparam_lambda = 0.05
         )
 

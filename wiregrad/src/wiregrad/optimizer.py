@@ -121,6 +121,9 @@ class ReparamVectorAdam(Optimizer):
         if eps <= 0.0:
             ValueError(f'eps must be >0, but is {eps}')
 
+        if reparam_lambda < 0.0 or reparam_lambda > 1.0:
+            ValueError(f'reparam_lambda must be >=0 and <=1 but is {reparam_lambda}')
+
         device = self.points.device
 
         # assuming that unique_edges do not contain duplicated edges
