@@ -5,6 +5,8 @@ import os
 
 import wiregrad as wg
 
+from utils import save_polyline, load_polyline
+
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
@@ -16,6 +18,7 @@ if __name__ == '__main__':
 
 
 
+    input_dir = None
     controls = []
 
 
@@ -23,20 +26,19 @@ if __name__ == '__main__':
 
         input_dir = os.path.dirname(args.path)
 
-        vtx, _ = igl.read_triangle_mesh(args.path)
-
-        controls.append(torch.from_numpy(vtx).type(torch.float32))
+        controls.append(load_polyline(args.path))
 
     elif os.path.isdir(args.path):
+
+        input_dir = args.path
+
         inputs = []
         for file in sorted(os.listdir(args.path)):
             if file.startswith('controls'):
                 inputs.append(file)
 
         for file in inputs:
-            vtx, _ = igl.read_triangle_mesh(os.path.join(args.path, file))
-
-            controls.append(torch.from_numpy(vtx).type(torch.float32))
+            controls.append(load_polyline(os.path.join(args.path, file)))
 
     else:
         assert False

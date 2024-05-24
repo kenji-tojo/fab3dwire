@@ -42,4 +42,38 @@ def save_polyline(
     igl.write_obj(path, points.numpy(), np.array([[0,1,2]], dtype=np.int32))
 
 
+def save_polyline(
+    nodes: torch.Tensor,
+    path: str,
+    rotate = True
+    ):
+
+    nodes = nodes.detach().cpu()
+
+    if rotate:
+        nodes = torch.matmul(nodes, wg.rotation(torch.tensor([-90.0, 0, 0])).t())
+
+    nodes = nodes.numpy()
+    content = '\n'.join([ f'v {v[0]} {v[1]} {v[2]}' for v in nodes ]) + '\n'
+
+    with open(path, 'w') as f:
+        f.write(content)
+
+
+def load_polyline(
+    path: str
+    ) -> torch.Tensor:
+
+    nodes = []
+
+    with open(path, 'r') as f:
+        for line in f.readlines():
+            if line.startswith('v'):
+                v = [ float(x) for x in line.split(' ')[1:] ]
+                assert len(v) == 3
+                nodes.append(v)
+
+    return torch.tensor(nodes, dtype=torch.float32)
+
+
 
