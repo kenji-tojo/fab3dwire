@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     from argparse import ArgumentParser
     parser = ArgumentParser()
-    parser.add_argument('--config', default='./data/config/bunny.json', help='path to the input config file')
+    parser.add_argument('--config', default='./data/config/mesh/bunny.json', help='path to the input config file')
     parser.add_argument('--no_video', action='store_true', help='not creating video')
     parser.add_argument('--cpu', action='store_true', help='force to use CPU')
     args = parser.parse_args()
