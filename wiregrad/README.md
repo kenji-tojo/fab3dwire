@@ -55,16 +55,16 @@ We also provide options to customize their execution. Please check them out if i
 ## Viewing the Results
 We put the results of ```./example_*.py``` produced in our environments in ```./data/results/```.
 
-You can use ```./show_bspline.py``` for viewing these (and your) generated B-spline curves.
+You can use ```./bspline.py``` for viewing these (and your) generated B-spline curves.
 
-A single curve can be shown by running, e.g.,
+A single curve can be shown by, e.g.,
 ```
-$ python3 ./show_bspline.py --file ./data/results/mesh/bunny/controls.obj
+$ python3 ./bspline.py ./data/results/mesh/bunny/controls.obj
 ```
 
-A directory can also be specified to show multiple ```./controls_*.obj``` files:
+A directory can also be specified to show multiple ```./controls_*.obj``` files inside:
 ```
-$ python3 ./show_bspline.py --dir ./data/results/text/horse_bull
+$ python3 ./bspline.py ./data/results/text/horse_bull
 ```
 
 ## Troubleshooting

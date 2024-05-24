@@ -229,7 +229,7 @@ if __name__ == '__main__':
                 img = img.detach().squeeze(0).permute(1,2,0)
                 imsave.save_image(img, os.path.join(output_dir, f'current_{i}.png'),logging=False)
 
-                save_polyline(points = points.detach(), path = os.path.join(output_dir, f'controls.obj'))
+                save_polyline(nodes = points.detach(), path = os.path.join(output_dir, f'controls.obj'))
 
                 if not args.no_video and iter % 10 == 0:
                     imsave.save_image(img, os.path.join(tmp_dir, f'img_{video_frame_id:04d}_{i}.png'),logging=False)
