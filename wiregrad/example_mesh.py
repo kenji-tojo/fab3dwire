@@ -161,7 +161,8 @@ if __name__ == '__main__':
 
 
 
-
+    ## reparameterized (preconditioned) Adam presented in [Nicolet et.al. SIGGRAPH Asia 2021] (title: "Large Steps in Inverse Rendering of Geometry")
+    ## reparam_lambda is usually set 0.1 - 0.01 in our experiments. In general, smaller reparam_lambda leads to more stiff curve deformation.
     optimier = wg.ReparamVectorAdam(
         points = points,
         unique_edges = wg.polyline_edges(len(points), cyclic=True),
