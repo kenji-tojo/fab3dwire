@@ -3,7 +3,7 @@ requires = [
     "setuptools>=42",
     "wheel",
     "scikit-build>=0.14.0",
-    "cmake>=3.22.1",
+    "cmake>=3.22",
     "nanobind==2.0.0"
 ]
 
