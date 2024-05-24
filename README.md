@@ -21,6 +21,11 @@ In SIGGRAPH 2024\
 
 ```wirejig/``` contains our code for automatically generating 3D-printable jigs that assist in wire-art fabrication.
 
+## WireGrad Tests
+<img src="./pics/tests.gif" width="75%">
+
+```wiregrad/tests/``` provides various *unit tests* of our differentiable renderer, regularizations, and optimization techniques for 3D curves, which help you understand how our method works and how to use our library in your projects.
+
 ## BibTeX
 ```
 @inproceedings{Tojo2024Wireart,
