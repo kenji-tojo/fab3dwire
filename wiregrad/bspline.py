@@ -9,51 +9,56 @@ import wiregrad as wg
 if __name__ == '__main__':
     from argparse import ArgumentParser
     parser = ArgumentParser()
-    parser.add_argument('-f', '--file', help='path to the input obj file')
-    parser.add_argument('-d', '--dir', help='path to the directory containing input obj files')
-    args =parser.parse_args()
-
-    assert args.file or args.dir, 'either --file or --dir must be specified'
-
-
-    import polyscope as ps
-    ps.init()
-
-    if args.file:
-        vtx, _ = igl.read_triangle_mesh(args.file)
-
-        points = torch.from_numpy(vtx).type(torch.float32)
-        nodes = wg.cubic_basis_spline(points, knots=len(points) * 10)
+    parser.add_argument('path', help='path to the input obj file or the directory containing obj files')
+    parser.add_argument('--discretize', help='save discretized polyline data')
+    parser.add_argument('--num_knots', type=int, default=-1, help='number of knots, which is basically the resolution of the discretized polyline')
+    args = parser.parse_args()
 
 
-        points = points.detach().cpu().numpy()
-        nodes = nodes.detach().cpu().numpy()
-        edges = wg.polyline_edges(len(nodes), cyclic=True).detach().cpu().numpy()
+
+    controls = []
 
 
-        pnt = ps.register_point_cloud('control_points', points, enabled=False)
-        net = ps.register_curve_network('curve', nodes, edges)
+    if os.path.isfile(args.path):
 
-    elif args.dir:
-        controls = []
-        for file in sorted(os.listdir(args.dir)):
+        input_dir = os.path.dirname(args.path)
+
+        vtx, _ = igl.read_triangle_mesh(args.path)
+
+        controls.append(torch.from_numpy(vtx).type(torch.float32))
+
+    elif os.path.isdir(args.path):
+        inputs = []
+        for file in sorted(os.listdir(args.path)):
             if file.startswith('controls'):
-                controls.append(file)
+                inputs.append(file)
 
-        for i,file in enumerate(controls):
-            vtx, _ = igl.read_triangle_mesh(os.path.join(args.dir, file))
+        for file in inputs:
+            vtx, _ = igl.read_triangle_mesh(os.path.join(args.path, file))
 
-            points = torch.from_numpy(vtx).type(torch.float32)
-            nodes = wg.cubic_basis_spline(points, knots=len(points) * 10)
+            controls.append(torch.from_numpy(vtx).type(torch.float32))
+
+    else:
+        assert False
 
 
-            points = points.detach().cpu().numpy()
-            nodes = nodes.detach().cpu().numpy()
+
+    if not args.discretize:
+
+        import polyscope as ps
+        ps.init()
+
+        for i,points in enumerate(controls):
+
+            num_knots = len(points) * 8 if args.num_knots == -1 else args.num_knots
+
+            nodes = wg.cubic_basis_spline(points, knots=num_knots).detach().cpu().numpy()
             edges = wg.polyline_edges(len(nodes), cyclic=True).detach().cpu().numpy()
 
-            pnt = ps.register_point_cloud(f'control_points_{i}', points, enabled=False)
-            net = ps.register_curve_network(f'curve_{i}', nodes, edges)
+            _ = ps.register_point_cloud(f'controls_{i}', points.detach().cpu().numpy(), enabled=False)
+            _ = ps.register_curve_network(f'polyilne_{i}', nodes, edges)
 
+        ps.show()
 
-    ps.show()
-
+    else:
+        pass
