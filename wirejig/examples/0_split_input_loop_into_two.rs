@@ -126,7 +126,8 @@ fn main() {
     let args: Vec<String> = std::env::args().collect();
     let proj_name = &args[1];
     println!("project name: {}", proj_name);
-    let (path_dir, scale) = ("asset/dog_cat/", 5.);
+    let fname = String::from(format!("asset/{}/", proj_name) );
+    let (path_dir, scale) = (fname, 5.);
     load(&(path_dir.to_owned() + "input.obj"),
          &(path_dir.to_owned()+"a.obj"),
          &(path_dir.to_owned() + "b.obj"),
